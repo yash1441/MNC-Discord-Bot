@@ -55,13 +55,20 @@ module.exports = {
 		);
 		const modalRow2 = new ActionRowBuilder().addComponents(
 			new TextInputBuilder()
+				.setCustomId("rid")
+				.setLabel("Role ID")
+				.setStyle(TextInputStyle.Short)
+				.setPlaceholder("Enter your Role ID here")
+		);
+		const modalRow3 = new ActionRowBuilder().addComponents(
+			new TextInputBuilder()
 				.setCustomId("description")
 				.setLabel("Description")
 				.setStyle(TextInputStyle.Paragraph)
 				.setPlaceholder("Explain your suggestion in detail here")
 		);
 
-		modal.addComponents(modalRow1, modalRow2);
+		modal.addComponents(modalRow1, modalRow2, modalRow3);
 
 		await interaction.editReply({
 			content: "**Suggestion Category**",
@@ -151,14 +158,18 @@ module.exports = {
 async function sendSuggestionAdmin(interaction, category) {
 	const user = interaction.user;
 	const title = interaction.fields.getTextInputValue("title");
+	const rid = interaction.fields.getTextInputValue("rid");
 	const description = interaction.fields.getTextInputValue("description");
 
 	const embed = new EmbedBuilder()
 		.setTitle(title)
 		.setDescription(description)
-		.addFields({ name: "Category", value: category, inline: true })
+		.addFields(
+			{ name: "Category", value: category, inline: true },
+			{ name: "Role ID", value: rid, inline: true }
+		)
 		.setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
-		.setFooter({ text: user.id })
+		.setFooter({ text: user.id + "-" + rid })
 		.setColor(process.env.EMBED_COLOR);
 
 	const approveButton = new ButtonBuilder()
