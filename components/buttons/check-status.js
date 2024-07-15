@@ -1,4 +1,4 @@
-const { bold, inlineCode, EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const lark = require("../../utils/lark");
 require("dotenv").config();
 
