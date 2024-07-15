@@ -65,13 +65,19 @@ module.exports = {
 				await button.execute(interaction);
 			} catch (error) {
 				console.error(error);
-				if (interaction.replied || interaction.deferred) {
+				if (interaction.replied) {
 					await interaction.followUp({
 						content:
 							"There was an error while executing this button!",
 						ephemeral: true,
 					});
-				} else {
+				} else if (interaction.deferred) {
+                    await interaction.editReply({
+						content:
+							"There was an error while executing this button!",
+						ephemeral: true,
+					}); 
+                } else {
 					await interaction.reply({
 						content:
 							"There was an error while executing this button!",
