@@ -28,7 +28,6 @@ module.exports = {
                 }
             }
         } else if (interaction.isButton()) {
-            console.log(interaction);
             const button = interaction.client.buttons.get(interaction.customId);
 
             if (!button) {
@@ -42,6 +41,7 @@ module.exports = {
             }
 
             try {
+                console.log(interaction.customId), 'is pressed.'
                 await button.execute(interaction);
             } catch (error) {
                 console.error(error);
