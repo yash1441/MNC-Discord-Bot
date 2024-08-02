@@ -61,7 +61,6 @@ module.exports = {
 			}
 
 			try {
-				console.log(interaction.customId, "is pressed.");
 				await button.execute(interaction);
 			} catch (error) {
 				console.error(error);
