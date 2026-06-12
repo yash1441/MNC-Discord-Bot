@@ -1,4 +1,10 @@
-const { EmbedBuilder, userMention, hyperlink, bold } = require("discord.js");
+const {
+	EmbedBuilder,
+	userMention,
+	hyperlink,
+	bold,
+	MessageFlagBits,
+} = require("discord.js");
 require("dotenv").config();
 
 module.exports = {
@@ -7,7 +13,7 @@ module.exports = {
 		name: "approve-suggestion",
 	},
 	async execute(interaction) {
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlagsBits.Ephemeral });
 
 		const embed = interaction.message.embeds[0];
 
@@ -35,7 +41,7 @@ module.exports = {
 
 async function sendSuggestionVote(interaction, embedData) {
 	const channel = await interaction.client.channels.fetch(
-		process.env.VOTE_SUGGESTION_ID
+		process.env.VOTE_SUGGESTION_ID,
 	);
 	const availableTags = channel.availableTags;
 	let tagId;

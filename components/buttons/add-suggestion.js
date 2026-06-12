@@ -14,6 +14,7 @@ const {
 	codeBlock,
 	channelMention,
 	userMention,
+	MessageFlagsBits,
 } = require("discord.js");
 require("dotenv").config();
 
@@ -23,10 +24,10 @@ module.exports = {
 		name: "add-suggestion",
 	},
 	async execute(interaction) {
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlagsBits.Ephemeral });
 
 		const channel = await interaction.client.channels.fetch(
-			process.env.VOTE_SUGGESTION_ID
+			process.env.VOTE_SUGGESTION_ID,
 		);
 		const availableTags = channel.availableTags;
 
@@ -38,7 +39,7 @@ module.exports = {
 			selectMenu.addOptions(
 				new StringSelectMenuOptionBuilder()
 					.setLabel(tag.name)
-					.setValue(tag.name)
+					.setValue(tag.name),
 			);
 		}
 
@@ -51,21 +52,21 @@ module.exports = {
 				.setCustomId("title")
 				.setLabel("Title")
 				.setStyle(TextInputStyle.Short)
-				.setPlaceholder("Give your suggestion a short title")
+				.setPlaceholder("Give your suggestion a short title"),
 		);
 		const modalRow2 = new ActionRowBuilder().addComponents(
 			new TextInputBuilder()
 				.setCustomId("rid")
 				.setLabel("Role ID")
 				.setStyle(TextInputStyle.Short)
-				.setPlaceholder("Enter your Role ID here")
+				.setPlaceholder("Enter your Role ID here"),
 		);
 		const modalRow3 = new ActionRowBuilder().addComponents(
 			new TextInputBuilder()
 				.setCustomId("description")
 				.setLabel("Description")
 				.setStyle(TextInputStyle.Paragraph)
-				.setPlaceholder("Explain your suggestion in detail here")
+				.setPlaceholder("Explain your suggestion in detail here"),
 		);
 
 		modal.addComponents(modalRow1, modalRow2, modalRow3);
@@ -100,8 +101,7 @@ module.exports = {
 				.awaitModalSubmit({
 					time: 60_000,
 					filter: (modalInteraction) =>
-						modalInteraction.user.id ===
-						selectMenuInteraction.user.id,
+						modalInteraction.user.id === selectMenuInteraction.user.id,
 				})
 				.catch(() => {
 					interaction.editReply({
@@ -116,7 +116,7 @@ module.exports = {
 
 			await modalReply.reply({
 				content: bold(modal.data.title),
-				ephemeral: true,
+				flags: MessageFlagsBits.Ephemeral,
 			});
 
 			await modalReply.deleteReply();
@@ -129,12 +129,11 @@ module.exports = {
 					bold(modal.data.title) +
 					"\n" +
 					codeBlock(
-						modalReply.fields.getTextInputValue("description")
-							.length < 2000
+						modalReply.fields.getTextInputValue("description").length < 2000
 							? modalReply.fields.getTextInputValue("description")
 							: modalReply.fields
 									.getTextInputValue("description")
-									.slice(0, 1000) + "..."
+									.slice(0, 1000) + "...",
 					),
 			});
 
@@ -166,7 +165,7 @@ async function sendSuggestionAdmin(interaction, category) {
 		.setDescription(description)
 		.addFields(
 			{ name: "Category", value: category, inline: true },
-			{ name: "Role ID", value: rid, inline: true }
+			{ name: "Role ID", value: rid, inline: true },
 		)
 		.setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
 		.setFooter({ text: user.id + "-" + rid })
@@ -185,7 +184,7 @@ async function sendSuggestionAdmin(interaction, category) {
 	const row = new ActionRowBuilder().addComponents(approveButton, denyButton);
 
 	const channel = await interaction.client.channels.fetch(
-		process.env.DECIDE_SUGGESTION_ID
+		process.env.DECIDE_SUGGESTION_ID,
 	);
 	await channel.send({ embeds: [embed], components: [row] });
 }

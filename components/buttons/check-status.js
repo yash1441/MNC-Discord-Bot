@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, MessageFlagBits } = require("discord.js");
 const lark = require("../../utils/lark");
 require("dotenv").config();
 
@@ -8,17 +8,14 @@ module.exports = {
 		name: "check-status",
 	},
 	async execute(interaction) {
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlagsBits.Ephemeral });
 
 		const response = await lark.listRecords(
 			process.env.CREATOR_BASE,
 			process.env.CREATOR_BASE,
 			{
-				filter:
-					'CurrentValue.[Discord ID] = "' +
-					interaction.user.id +
-					'")',
-			}
+				filter: 'CurrentValue.[Discord ID] = "' + interaction.user.id + '")',
+			},
 		);
 
 		if (!response || !response.total) {
@@ -62,7 +59,7 @@ module.exports = {
 					name: "Total BP",
 					value: userData.totalBP,
 					inline: false,
-				}
+				},
 			)
 			.setColor(process.env.EMBED_COLOR)
 			.setTimestamp();
